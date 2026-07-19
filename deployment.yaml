@@ -15,7 +15,7 @@ data:
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Save Sonam Wanchuk Save Sonam Wanchuk and save world</title>
+        <title>Help</title>
         <style>
           body {
             margin: 0;
@@ -46,7 +46,7 @@ data:
       </head>
       <body>
         <div class="box">
-          <h1>Save Sonam Wanchuk Save Sonam Wanchuk and save world </h1>
+          <h1>Help</h1>
           <p>A simple, elegant landing page deployed on a k3s Kubernetes cluster.</p>
         </div>
       </body>
