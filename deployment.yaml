@@ -1,0 +1,96 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sonam-demo
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sonam-wanchuk-site
+  namespace: sonam-demo
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Save Sonam Wanchuk</title>
+        <style>
+          body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #07121f 0%, #123b62 100%);
+            color: #f8fbff;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+          }
+          .box {
+            padding: 2rem 2.5rem;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+          }
+          h1 {
+            margin-bottom: 0.5rem;
+            font-size: 2.2rem;
+          }
+          p {
+            line-height: 1.6;
+            color: #e8f1ff;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="box">
+          <h1>Save Sonam Wanchuk</h1>
+          <p>A simple, elegant landing page deployed on a k3s Kubernetes cluster.</p>
+        </div>
+      </body>
+    </html>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonam-wanchuk
+  namespace: sonam-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonam-wanchuk
+  template:
+    metadata:
+      labels:
+        app: sonam-wanchuk
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27-alpine
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: site-content
+              mountPath: /usr/share/nginx/html/index.html
+              subPath: index.html
+      volumes:
+        - name: site-content
+          configMap:
+            name: sonam-wanchuk-site
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonam-wanchuk
+  namespace: sonam-demo
+spec:
+  type: NodePort
+  selector:
+    app: sonam-wanchuk
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30080
